@@ -179,7 +179,7 @@ class Game(tk.Frame):
         image_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
         # Defina os intervalos de cor para a detecção de verde
-        lower_blue = np.array([90, 60, 60])
+        lower_blue = np.array([90, 100, 100])
         upper_blue = np.array([130, 255, 255])
 
         # Aplique uma máscara para segmentar a cor verde
