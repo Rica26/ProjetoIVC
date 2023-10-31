@@ -3,9 +3,12 @@ import cv2
 import numpy as np
 
 class GameObject(object):
+
     def __init__(self, canvas, item):
         self.canvas = canvas
         self.item = item
+
+
 
     def get_position(self):
         return self.canvas.coords(self.item)
@@ -26,6 +29,7 @@ class Ball(GameObject):
                                   x+self.radius, y+self.radius,
                                   fill='white')
         super(Ball, self).__init__(canvas, item)
+
 
     def update(self):
         coords = self.get_position()
@@ -120,6 +124,9 @@ class Game(tk.Frame):
         self.pack()
 
         self.items = {}
+        self.cap = cv2.VideoCapture(0)  # Inicialize a captura da câmera aqui
+        if not self.cap.isOpened():
+            self.cap.open(0)
         self.ball = None
         self.paddle = Paddle(self.canvas, self.width/2, 326)
         self.items[self.paddle.item] = self.paddle
@@ -171,15 +178,12 @@ class Game(tk.Frame):
 
 
     def update_segmentation(self):
-        cap = cv2.VideoCapture()
-        if not cap.isOpened():
-            cap.open(0)
-        ret, image = cap.read()
+        ret, image = self.cap.read()
         image = image[:, ::-1, :]
         image_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
         # Defina os intervalos de cor para a detecção de verde
-        lower_blue = np.array([90, 100, 100])
+        lower_blue = np.array([90, 120, 120 ])
         upper_blue = np.array([130, 255, 255])
 
         # Aplique uma máscara para segmentar a cor verde
