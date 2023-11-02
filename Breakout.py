@@ -201,8 +201,6 @@ class Game(tk.Frame):
                              thickness=-1)
                 M = cv2.moments(contour)
                 Cx = int(np.round(M['m10'] / M['m00']))
-                Cy = int(np.round(M['m01'] / M['m00']))
-                perimeter = cv2.arcLength(curve=contour, closed=True)
                 if Cx > (2 / 3) * mask.shape[1]:
                     cv2.rectangle(img=mask_filtered,
                                   pt1=(mask.shape[1] - 10, 0),
@@ -216,7 +214,10 @@ class Game(tk.Frame):
                                   color=1, thickness=5)
                     self.paddle.move(-15)
                 else:
-                    pass
+                    cv2.rectangle(img=mask_filtered,
+                                  pt1=(mask.shape[1] // 3, 0),
+                                  pt2=(mask.shape[1] // 3 * 2, mask.shape[0]),
+                                  color=1, thickness=5)
         cv2.imshow("Mask Filtered", mask_filtered * 255)
 
     def start_game(self):
