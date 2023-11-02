@@ -124,7 +124,7 @@ class Game(tk.Frame):
         self.pack()
 
         self.items = {}
-        self.cap = cv2.VideoCapture(0)  # Inicialize a captura da câmera aqui
+        self.cap = cv2.VideoCapture(0)
         if not self.cap.isOpened():
             self.cap.open(0)
         self.ball = None
@@ -182,11 +182,9 @@ class Game(tk.Frame):
         image = image[:, ::-1, :]
         image_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-        # Defina os intervalos de cor para a detecção de verde
         lower_blue = np.array([90, 120, 120 ])
         upper_blue = np.array([130, 255, 255])
 
-        # Aplique uma máscara para segmentar a cor verde
         mask = cv2.inRange(image_hsv, lower_blue, upper_blue)
 
         contours, hierarchy = cv2.findContours(image=mask, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_NONE)
@@ -195,7 +193,7 @@ class Game(tk.Frame):
         for i in range(len(contours)):
             contour = contours[i]
             contour_area = cv2.contourArea(contour)
-            if contour_area > 100:
+            if contour_area > 300:
                 cv2.drawContours(image=mask_filtered,
                              contours=contours,
                              contourIdx=i,
@@ -204,13 +202,21 @@ class Game(tk.Frame):
                 M = cv2.moments(contour)
                 Cx = int(np.round(M['m10'] / M['m00']))
                 Cy = int(np.round(M['m01'] / M['m00']))
-                perimeter = cv2.arcLength(curve=contour, closed=True)
-                if Cx > mask.shape[1] / 2:
-                    cv2.rectangle(mask_filtered, (mask.shape[1] - 10, 0), (mask.shape[1], mask.shape[0]), color=1, thickness=5)
-                    self.paddle.move(10)
+                perimiter = cv2.arcLength(curve=contour, closed=True)
+                if Cx > (2 / 3) * mask.shape[1]:
+                    cv2.rectangle(img=mask_filtered,
+                                  pt1=(mask.shape[1] - 10, 0),
+                                  pt2=(mask.shape[1], mask.shape[0]),
+                                  color=1, thickness=5)
+                    self.paddle.move(15)
+                elif Cx < (1 / 3) * mask.shape[1]:
+                    cv2.rectangle(img=mask_filtered,
+                                  pt1=(0, 0),
+                                  pt2=(10, mask.shape[0]),
+                                  color=1, thickness=5)
+                    self.paddle.move(-15)
                 else:
-                    cv2.rectangle(mask_filtered, (0, 0), (10, mask.shape[0]), color=1, thickness=5)
-                    self.paddle.move(-10)
+                    pass
         cv2.imshow("Mask Filtered", mask_filtered * 255)
 
     def start_game(self):
