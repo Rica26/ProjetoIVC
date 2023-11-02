@@ -182,10 +182,10 @@ class Game(tk.Frame):
         image = image[:, ::-1, :]
         image_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-        lower_blue = np.array([90, 120, 120 ])
-        upper_blue = np.array([130, 255, 255])
+        lower_green = np.array([40, 100, 100])
+        upper_green = np.array([80, 255, 255])
 
-        mask = cv2.inRange(image_hsv, lower_blue, upper_blue)
+        mask = cv2.inRange(image_hsv, lower_green, upper_green)
 
         contours, hierarchy = cv2.findContours(image=mask, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_NONE)
 
