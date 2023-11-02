@@ -202,7 +202,7 @@ class Game(tk.Frame):
                 M = cv2.moments(contour)
                 Cx = int(np.round(M['m10'] / M['m00']))
                 Cy = int(np.round(M['m01'] / M['m00']))
-                perimiter = cv2.arcLength(curve=contour, closed=True)
+                perimeter = cv2.arcLength(curve=contour, closed=True)
                 if Cx > (2 / 3) * mask.shape[1]:
                     cv2.rectangle(img=mask_filtered,
                                   pt1=(mask.shape[1] - 10, 0),
