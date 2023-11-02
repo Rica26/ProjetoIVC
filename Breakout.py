@@ -214,6 +214,7 @@ class Game(tk.Frame):
                                   color=1, thickness=5)
                     self.paddle.move(-15)
                 else:
+                    #ta tudo
                     cv2.rectangle(img=mask_filtered,
                                   pt1=(mask.shape[1] // 3, 0),
                                   pt2=(mask.shape[1] // 3 * 2, mask.shape[0]),
